@@ -1,0 +1,120 @@
+```mermaid
+flowchart TB
+    %% Frontend Layer
+    subgraph "FRONTEND" 
+        direction TB
+        FE_Index["Entry Point\nfrontend/src/index.js"]:::frontend
+        FE_App["React SPA\nfrontend/src/App.js"]:::frontend
+        FE_API["API Client\nfrontend/src/components/api.js"]:::frontend
+        subgraph "Components" 
+            direction TB
+            Nav["Navbar\nfrontend/src/components/Navbar.js"]:::frontend
+            Home["HomePage\nfrontend/src/components/HomePage.js"]:::frontend
+            Gallery["GalleryPage\nfrontend/src/components/GalleryPage.js"]:::frontend
+            About["AboutPage\nfrontend/src/components/AboutPage.js"]:::frontend
+            Artist["ArtistPage\nfrontend/src/components/ArtistPage.js"]:::frontend
+            Photographer["PhotographerPage\nfrontend/src/components/PhotographerPage.js"]:::frontend
+            AddPhoto["AddPhotoModal\nfrontend/src/components/AddPhotoModal.js"]:::frontend
+            Auth["AuthModal\nfrontend/src/components/AuthModal.js"]:::frontend
+            Modal["Modal\nfrontend/src/components/Modal.js"]:::frontend
+        end
+        FE_Tailwind["Tailwind Config\nfrontend/tailwind.config.js"]:::frontend
+        FE_Gitignore[".gitignore\nfrontend/.gitignore"]:::infra
+    end
+
+    %% Backend Layer
+    subgraph "BACKEND" 
+        direction TB
+        BE_Manage["manage.py\nbackend/photo_portfolio/manage.py"]:::backend
+        BE_Settings["settings.py\nbackend/photo_portfolio/photo_portfolio/photo_portfolio/settings.py"]:::backend
+        BE_URLRoot["Root URLs\nbackend/photo_portfolio/photo_portfolio/urls.py"]:::backend
+        BE_ASGI["asgi.py\nbackend/photo_portfolio/photo_portfolio/photo_portfolio/asgi.py"]:::backend
+        BE_WSGI["wsgi.py\nbackend/photo_portfolio/photo_portfolio/photo_portfolio/wsgi.py"]:::backend
+        BE_Gitignore[".gitignore\nbackend/.gitignore"]:::infra
+        subgraph "Photos App" 
+            direction TB
+            PA_URLs["photos/urls.py\nbackend/.../photos/urls.py"]:::backend
+            PA_Views["photos/views.py\nbackend/.../photos/views.py"]:::backend
+            PA_Serializers["photos/serializers.py\nbackend/.../photos/serializers.py"]:::backend
+            PA_Models["photos/models.py\nbackend/.../photos/models.py"]:::backend
+            PA_Perms["photos/permissions.py\nbackend/.../photos/permissions.py"]:::backend
+            PA_Signals["photos/signals.py\nbackend/.../photos/signals.py"]:::backend
+            PA_Migrations["photos/migrations/\nbackend/.../photos/migrations/"]:::backend
+        end
+        BE_DB["SQLite Database\ndb.sqlite3"]:::datastore
+        BE_Media["Media Storage\nmedia/"]:::datastore
+    end
+
+    %% Infrastructure
+    NGINX["NGINX/Gunicorn\n(production)"]:::infra
+
+    %% Connections
+    FE_Index -->|"loads"| FE_App
+    FE_App -->|"renders"| Nav
+    FE_App --> Home
+    FE_App --> Gallery
+    FE_App --> About
+    FE_App --> Artist
+    FE_App --> Photographer
+    FE_App --> AddPhoto
+    FE_App --> Auth
+    FE_App --> Modal
+    FE_App --> FE_API
+    FE_App --> FE_Tailwind
+
+    FE_API -->|"/api/*"| BE_URLRoot
+    FE_API -->|"POST /api/photos/"| BE_URLRoot
+
+    BE_URLRoot --> PA_URLs
+    PA_URLs --> PA_Views
+    PA_Views --> PA_Serializers
+    PA_Serializers --> PA_Models
+    PA_Models --> BE_DB
+    PA_Views --> BE_Media
+    PA_Signals --> PA_Models
+
+    BE_Settings --> BE_URLRoot
+    BE_Settings --> BE_Media
+
+    BE_Manage --> BE_Settings
+    BE_Manage --> BE_ASGI
+    BE_Manage --> BE_WSGI
+
+    NGINX --> FE_App
+    NGINX --> BE_WSGI
+
+    %% Click events
+    click FE_Index "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/index.js"
+    click FE_App "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/App.js"
+    click FE_API "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/components/api.js"
+    click Nav "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/components/Navbar.js"
+    click Home "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/components/HomePage.js"
+    click Gallery "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/components/GalleryPage.js"
+    click About "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/components/AboutPage.js"
+    click Artist "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/components/ArtistPage.js"
+    click Photographer "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/components/PhotographerPage.js"
+    click AddPhoto "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/components/AddPhotoModal.js"
+    click Auth "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/components/AuthModal.js"
+    click Modal "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/src/components/Modal.js"
+    click FE_Tailwind "https://github.com/docesforg/photo-portfolio-localversion/blob/main/frontend/tailwind.config.js"
+    click BE_Manage "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/manage.py"
+    click BE_Settings "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/photo_portfolio/settings.py"
+    click BE_URLRoot "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/urls.py"
+    click BE_ASGI "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/photo_portfolio/asgi.py"
+    click BE_WSGI "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/photo_portfolio/wsgi.py"
+    click PA_URLs "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/photos/urls.py"
+    click PA_Views "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/photos/views.py"
+    click PA_Serializers "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/photos/serializers.py"
+    click PA_Models "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/photos/models.py"
+    click PA_Perms "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/photos/permissions.py"
+    click PA_Signals "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/photos/signals.py"
+    click PA_Migrations "https://github.com/docesforg/photo-portfolio-localversion/tree/main/backend/photo_portfolio/photo_portfolio/photos/migrations/"
+    click BE_DB "https://github.com/docesforg/photo-portfolio-localversion/blob/main/backend/photo_portfolio/photo_portfolio/db.sqlite3"
+    click BE_Media "https://github.com/docesforg/photo-portfolio-localversion/tree/main/backend/photo_portfolio/photo_portfolio/media/"
+
+    %% Styles
+    classDef frontend fill:#E0F2FF,stroke:#00A3FF,color:#003E6B;
+    classDef backend fill:#E8F5E9,stroke:#34A853,color:#1B5E20;
+    classDef datastore fill:#FFFDE7,stroke:#FBC02D,color:#F57F17;
+    classDef infra fill:#FFF3E0,stroke:#FB8C00,color:#E65100;
+    ```
